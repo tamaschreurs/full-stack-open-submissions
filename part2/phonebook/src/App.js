@@ -1,31 +1,54 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import Person from "./components/Person";
+import personService from "./services/persons";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    // { name: "Arto Hellas", number: "040-123456" },
-    // { name: "Ada Lovelace", number: "39-44-5323523" },
-    // { name: "Dan Abramov", number: "12-43-234345" },
-    // { name: "Mary Poppendieck", number: "39-23-6423122" },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) => setPersons(response.data));
+    personService.getPersons().then((data) => setPersons(data));
   }, []);
+
+  const handleDeletePerson = (name, id) => {
+    if (window.confirm(`Are you sure you want to delete ${name}?`)) {
+      personService.removePerson(id).then(() => {
+        const newPersons = persons.filter((person) => person.id !== id);
+        setPersons(newPersons);
+      });
+    }
+  };
 
   const handleNameSubmit = (e) => {
     e.preventDefault();
-    if (!persons.find((person) => person.name === newName)) {
-      setPersons(persons.concat({ name: newName, number: newNumber }));
+    const submittedPerson = persons.find((person) => person.name === newName);
+    if (!submittedPerson) {
+      const newPerson = { name: newName, number: newNumber };
+      personService
+        .addPerson(newPerson)
+        .then((addedPerson) => {
+          setPersons(persons.concat(addedPerson));
+          resetInput();
+        })
+        .catch((error) => {
+          alert(`${newPerson.name} could not be added to the database.`);
+        });
     } else {
-      alert(`${newName} is already added to phonebook.`);
+      personService
+        .changeNumber(submittedPerson, newNumber)
+        .then((updatedPerson) => {
+          const newPersons = persons.map((person) =>
+            person.id !== submittedPerson.id ? person : updatedPerson
+          );
+          setPersons(newPersons);
+          resetInput();
+        });
     }
+  };
 
+  const resetInput = () => {
     setNewName("");
     setNewNumber("");
   };
@@ -51,7 +74,13 @@ const App = () => {
       <h2>Numbers</h2>
       {persons.map((person) => {
         if (person.name.toLowerCase().includes(filter.toLowerCase())) {
-          return <Person person={person} key={person.name} />;
+          return (
+            <Person
+              person={person}
+              key={person.name}
+              deletePerson={() => handleDeletePerson(person.name, person.id)}
+            />
+          );
         } else {
           return null;
         }
@@ -85,16 +114,6 @@ const TextInput = (props) => {
   return (
     <div>
       {label} <input type="text" onChange={handleChange} value={value} />
-    </div>
-  );
-};
-
-const Person = (props) => {
-  const { person } = props;
-
-  return (
-    <div>
-      {person.name} {person.number}
     </div>
   );
 };
