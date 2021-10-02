@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Person from "./components/Person";
+import Message from "./components/Message";
 import personService from "./services/persons";
 
 const App = () => {
@@ -7,6 +8,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [message, setMessage] = useState({});
 
   useEffect(() => {
     personService.getPersons().then((data) => setPersons(data));
@@ -14,10 +16,19 @@ const App = () => {
 
   const handleDeletePerson = (name, id) => {
     if (window.confirm(`Are you sure you want to delete ${name}?`)) {
-      personService.removePerson(id).then(() => {
-        const newPersons = persons.filter((person) => person.id !== id);
-        setPersons(newPersons);
-      });
+      personService
+        .removePerson(id)
+        .then(() => {
+          const newPersons = persons.filter((person) => person.id !== id);
+          setPersons(newPersons);
+          createMessage(`Succesfully removed ${name} from server`, "danger");
+        })
+        .catch((error) => {
+          createMessage(
+            `Cannot remove ${name}. Was already removed from server.`,
+            "danger"
+          );
+        });
     }
   };
 
@@ -31,9 +42,10 @@ const App = () => {
         .then((addedPerson) => {
           setPersons(persons.concat(addedPerson));
           resetInput();
+          createMessage(`Added ${newName}`, "success");
         })
         .catch((error) => {
-          alert(`${newPerson.name} could not be added to the database.`);
+          alert(`${newName} could not be added to the database.`);
         });
     } else {
       personService
@@ -44,6 +56,7 @@ const App = () => {
           );
           setPersons(newPersons);
           resetInput();
+          createMessage(`Updated ${newName}`, "success");
         });
     }
   };
@@ -53,9 +66,15 @@ const App = () => {
     setNewNumber("");
   };
 
+  const createMessage = (content, type) => {
+    setMessage({ content, type });
+    setTimeout(() => setMessage({}), 5000);
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <Message message={message.content} type={message.type} />
       <div>
         <TextInput
           label="filter shown with"
