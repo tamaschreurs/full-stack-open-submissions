@@ -45,7 +45,7 @@ const App = () => {
           createMessage(`Added ${newName}`, "success");
         })
         .catch((error) => {
-          alert(`${newName} could not be added to the database.`);
+          createMessage(error.response.data.error, "danger");
         });
     } else {
       personService
@@ -57,6 +57,9 @@ const App = () => {
           setPersons(newPersons);
           resetInput();
           createMessage(`Updated ${newName}`, "success");
+        })
+        .catch((error) => {
+          createMessage(error.response.data.error, "danger");
         });
     }
   };
