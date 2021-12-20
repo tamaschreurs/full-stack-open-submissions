@@ -14,19 +14,27 @@ const listWithOneBlog = [
 const listWithMoreBlogs = [
   ...listWithOneBlog,
   {
-    _id: "61be6df8e2d915d42c049616",
-    title: "HCH",
-    author: "Peter Paas",
-    url: "http://example.com",
-    likes: 2039,
-    __v: 0,
-  },
-  {
     _id: "5a422b891b54a676234d17fa",
     title: "First class tests",
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
     likes: 10,
+    __v: 0,
+  },
+  {
+    _id: "61be6df8e2d915d42c049616",
+    title: "HCH",
+    author: "Peter Paas",
+    url: "http://example.com",
+    likes: 12,
+    __v: 0,
+  },
+  {
+    _id: "5a422ba71b54a676234d17fb",
+    title: "TDD harms architecture",
+    author: "Robert C. Martin",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+    likes: 3,
     __v: 0,
   },
 ];
@@ -51,7 +59,7 @@ describe("total likes", () => {
 
   test("of a bigger list is calculated right", () => {
     const result = listHelper.totalLikes(listWithMoreBlogs);
-    expect(result).toBe(2054);
+    expect(result).toBe(30);
   });
 });
 
@@ -76,7 +84,57 @@ describe("favourite blog", () => {
     const expected = {
       title: "HCH",
       author: "Peter Paas",
-      likes: 2039,
+      likes: 12,
+    };
+    expect(result).toEqual(expected);
+  });
+});
+
+describe("most common author", () => {
+  test("in an empty list is an empty object", () => {
+    const result = listHelper.mostBlogs([]);
+    expect(result).toEqual({});
+  });
+
+  test("in a list with one author is that author", () => {
+    const result = listHelper.mostBlogs(listWithOneBlog);
+    const expected = {
+      author: "Edsger W. Dijkstra",
+      blogs: 1,
+    };
+    expect(result).toEqual(expected);
+  });
+
+  test("in a list of authors is the author with most written posts", () => {
+    const result = listHelper.mostBlogs(listWithMoreBlogs);
+    const expected = {
+      author: "Robert C. Martin",
+      blogs: 2,
+    };
+    expect(result).toEqual(expected);
+  });
+});
+
+describe("author with most likes", () => {
+  test("in an empty list is an empty object", () => {
+    const result = listHelper.mostLikes([]);
+    expect(result).toEqual({});
+  });
+
+  test("in a list with one author is that author", () => {
+    const result = listHelper.mostLikes(listWithOneBlog);
+    const expected = {
+      author: "Edsger W. Dijkstra",
+      likes: 5,
+    };
+    expect(result).toEqual(expected);
+  });
+
+  test("in a list of authors is the author with most total likes", () => {
+    const result = listHelper.mostLikes(listWithMoreBlogs);
+    const expected = {
+      author: "Robert C. Martin",
+      likes: 13,
     };
     expect(result).toEqual(expected);
   });

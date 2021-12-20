@@ -1,3 +1,6 @@
+const { result } = require("lodash");
+const __ = require("lodash");
+
 const dummy = (blogs) => {
   return 1;
 };
@@ -22,8 +25,47 @@ const favoriteBlog = (blogList) => {
   };
 };
 
+const mostBlogs = (blogList) => {
+  let result = {};
+  if (blogList.length > 0) {
+    let mostPopular = __.countBy(blogList, "author");
+    mostPopular = __.toPairs(mostPopular);
+    mostPopular = __.maxBy(mostPopular, __.last());
+    result = {
+      author: mostPopular[0],
+      blogs: mostPopular[1],
+    };
+  }
+
+  return result;
+};
+
+const mostLikes = (blogList) => {
+  let result = { likes: -1 };
+  if (blogList.length > 0) {
+    let mostPopular = __.groupBy(blogList, "author");
+    __.forEach(mostPopular, (author) => {
+      let sum = __.sumBy(author, "likes");
+      if (sum > result.likes) {
+        result = {
+          author: author[0].author,
+          likes: sum,
+        };
+      }
+    });
+    // mostPopular = __.toPairs(mostPopular);
+    // mostPopular = __.maxBy(mostPopular, __.last());
+  } else {
+    result = {};
+  }
+
+  return result;
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
+  mostLikes,
 };
