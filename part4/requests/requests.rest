@@ -9,3 +9,12 @@ content-type: application/json
   "url":"https://example.com/test",
   "likes": 7
 }
+###
+POST http://localhost:3003/api/blogs
+content-type: application/json
+
+{
+  "title":"HCEsH",
+  "author":"Peteer Paas",
+  "likes": 7
+}
