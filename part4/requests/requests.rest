@@ -1,11 +1,11 @@
 GET http://localhost:3003/api/blogs
 ###
 POST http://localhost:3003/api/blogs
-Content-Type: application/json
+content-type: application/json
 
 {
-  "title":"HCH",
-  "author":"Peter Paas",
-  "url":"example.com",
-  "likes":2039
+  "title":"HCEsH",
+  "author":"Peteer Paas",
+  "url":"https://example.com/test",
+  "likes": 7
 }

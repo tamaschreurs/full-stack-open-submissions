@@ -28,6 +28,23 @@ test("identifier of blogs is defined by the id property", async () => {
   expect(response.body[0].id).toBeDefined();
 });
 
+test("POST request leads to new blog in DB", async () => {
+  const newBlog = {
+    title: "The wonderful world of programming",
+    author: "Pesky Programmer",
+    url: "https://example.com/peskyprogrammer",
+    likes: 7,
+  };
+
+  await api.post("/api/blogs").send(newBlog);
+
+  const response = await api.get("/api/blogs");
+  const contents = response.body.map((r) => r.title);
+
+  expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
+  expect(contents).toContain("The wonderful world of programming");
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
