@@ -17,8 +17,8 @@ mongoose
     logger.error("error connecting to MongoDB:", error.message);
   });
 
-app.use("/api/blogs", blogRouter);
 app.use(cors());
 app.use(express.json());
+app.use("/api/blogs", blogRouter);
 
 module.exports = app;
