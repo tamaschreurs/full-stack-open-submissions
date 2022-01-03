@@ -82,6 +82,25 @@ describe("testing the note api", () => {
     expect(response.body).toHaveLength(blogsAtStart.length - 1);
     expect(response.body).not.toContainEqual(firstBlog);
   });
+
+  test("updating the likes of a note leads to a response of an object with the correct number of likes", async () => {
+    const blogsAtStart = await helper.blogsInDB();
+    const blogToChange = blogsAtStart.find(
+      (blog) => blog.title === "First class tests"
+    );
+
+    const response = await api
+      .put(`/api/blogs/${blogToChange.id}`)
+      .send({ likes: 17 });
+
+    const blogsAtEnd = await helper.blogsInDB();
+    const changedBlog = blogsAtEnd.find(
+      (blog) => blog.title === "First class tests"
+    );
+
+    expect(response.body.likes).toBe(17);
+    expect(response.body).toEqual(changedBlog);
+  });
 });
 
 afterAll(() => {

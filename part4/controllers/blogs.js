@@ -14,6 +14,17 @@ blogRouter.delete("/:id", async (request, response) => {
   response.status(204).end();
 });
 
+blogRouter.put("/:id", async (request, response) => {
+  const id = request.params.id;
+  const likeUpdated = { likes: request.body.likes };
+
+  const updatedNote = await Blog.findByIdAndUpdate(id, likeUpdated, {
+    new: true,
+    runValidators: true,
+  });
+  response.json(updatedNote);
+});
+
 blogRouter.post("/", async (request, response) => {
   let newBlog = request.body;
 
