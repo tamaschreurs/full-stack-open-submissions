@@ -14,6 +14,7 @@ blogRouter.post("/", (request, response) => {
     response
       .status(400)
       .send("Error: cannot create blog without title or URL.");
+    return;
   }
 
   if (newBlog.likes === undefined) {
