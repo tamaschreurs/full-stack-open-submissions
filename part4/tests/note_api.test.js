@@ -71,6 +71,17 @@ describe("testing the note api", () => {
 
     await api.post("/api/blogs").send(newBlog).expect(400);
   });
+
+  test("DELETE of first blog leads to 204 response and removal of it in DB", async () => {
+    const blogsAtStart = await helper.blogsInDB();
+    const firstBlog = blogsAtStart[0];
+
+    await api.delete(`/api/blogs/${firstBlog.id}`).expect(204);
+
+    const response = await api.get("/api/blogs");
+    expect(response.body).toHaveLength(blogsAtStart.length - 1);
+    expect(response.body).not.toContainEqual(firstBlog);
+  });
 });
 
 afterAll(() => {

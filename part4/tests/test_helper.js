@@ -36,7 +36,8 @@ const nonExistingId = async () => {
 };
 
 const blogsInDB = async () => {
-  const blogs = await Blog.find({});
+  let blogs = await Blog.find({});
+  blogs = blogs.map((blog) => blog.toJSON());
   return blogs;
 };
 
