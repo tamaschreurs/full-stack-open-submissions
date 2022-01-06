@@ -63,7 +63,7 @@ describe("testing the note api", () => {
     expect(urlLikes).toContainEqual({ url: newBlog.url, likes: 0 });
   });
 
-  test("400 response for requests without title and url properties", async () => {
+  test.only("400 response for requests without title and url properties", async () => {
     const newBlog = {
       author: "Pesky Programmer",
       likes: 6,

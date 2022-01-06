@@ -18,3 +18,14 @@ content-type: application/json
   "author":"Peteer Paas",
   "likes": 7
 }
+###
+get http://localhost:3003/api/users
+###
+POST http://localhost:3003/api/users
+content-type: application/json
+
+{
+  "username":"toemie",
+  "name":"Tama",
+  "password": "unbreakable"
+}
