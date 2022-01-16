@@ -3,14 +3,6 @@ const Blog = require("../models/blog");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
-const getTokenFrom = (request) => {
-  const authorization = request.get("authorization");
-  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-    return authorization.substring(7);
-  }
-  return null;
-};
-
 blogRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 });
   response.json(blogs);
@@ -18,6 +10,19 @@ blogRouter.get("/", async (request, response) => {
 
 blogRouter.delete("/:id", async (request, response) => {
   const id = request.params.id;
+
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "token missing or invalid" });
+  }
+
+  const blogToDelete = await Blog.findById(id);
+
+  if (blogToDelete.user.toString() !== decodedToken.id) {
+    return response
+      .status(401)
+      .json({ error: "user not authorised to delete blog" });
+  }
 
   await Blog.findByIdAndRemove(id);
 
