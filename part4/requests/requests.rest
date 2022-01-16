@@ -4,9 +4,9 @@ POST http://localhost:3003/api/blogs
 content-type: application/json
 
 {
-  "title":"HCEsH",
+  "title":"Nieuwe blog2",
   "author":"Peteer Paas",
-  "url":"https://example.com/test",
+  "url":"https://example.com/test2",
   "likes": 7
 }
 ###
