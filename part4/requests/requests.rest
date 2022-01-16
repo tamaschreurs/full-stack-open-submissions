@@ -11,6 +11,10 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRvZ
   "likes": 7
 }
 ###
+DELETE http://localhost:3003/api/blogs/61e4a05d66370606719b75f7
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InR3ZWVkZWdlYnJ1aWtlciIsImlkIjoiNjFlNGEwOWU2NjM3MDYwNjcxOWI3NWZjIiwiaWF0IjoxNjQyMzczMzA0fQ.7MdvgMMKiyi6FYUEt-f1VYUc5cBdDTYTaKhfBM9ca5U
+###
 POST http://localhost:3003/api/blogs
 content-type: application/json
 
@@ -31,10 +35,19 @@ content-type: application/json
   "password": "unbreakable"
 }
 ###
+POST http://localhost:3003/api/users
+content-type: application/json
+
+{
+  "username":"tweedegebruiker",
+  "name":"Joris",
+  "password": "nogslimmer"
+}
+###
 POST http://localhost:3003/api/login
 content-type: application/json
 
 {
-  "username":"toemie",
-  "password":"unbreakable"
+  "username":"tweedegebruiker",
+  "password":"nogslimmer"
 }
