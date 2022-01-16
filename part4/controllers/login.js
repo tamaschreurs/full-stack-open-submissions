@@ -23,6 +23,7 @@ loginRouter.post("/", async (request, response) => {
     id: user._id,
   };
 
+  //NB. Tokens do not expire!!
   const token = jwt.sign(userForToken, process.env.SECRET);
 
   response
