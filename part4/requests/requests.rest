@@ -5,7 +5,7 @@ content-type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRvZW1pZSIsImlkIjoiNjFkNmY1MDU2MzdkMTRhODY1YWNlYTcyIiwiaWF0IjoxNjQyMzY2MzYzfQ.ISkJr8LtY3tvFW079wP3gQJcSqvP9jegEl7sEHl0nqs
 
 {
-  "title":"Nieuwe blog4",
+  "title":"Nieuwe blog5",
   "author":"Peteer Paas",
   "url":"https://example.com/test2",
   "likes": 7
@@ -13,7 +13,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRvZ
 ###
 DELETE http://localhost:3003/api/blogs/61e4a05d66370606719b75f7
 content-type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InR3ZWVkZWdlYnJ1aWtlciIsImlkIjoiNjFlNGEwOWU2NjM3MDYwNjcxOWI3NWZjIiwiaWF0IjoxNjQyMzczMzA0fQ.7MdvgMMKiyi6FYUEt-f1VYUc5cBdDTYTaKhfBM9ca5U
+Authorization: bearer yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRvZW1pZSIsImlkIjoiNjFkNmY1MDU2MzdkMTRhODY1YWNlYTcyIiwiaWF0IjoxNjQyMzY2MzYzfQ.ISkJr8LtY3tvFW079wP3gQJcSqvP9jegEl7sEHl0nqs
 ###
 POST http://localhost:3003/api/blogs
 content-type: application/json
