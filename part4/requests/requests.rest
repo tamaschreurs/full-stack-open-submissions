@@ -29,3 +29,11 @@ content-type: application/json
   "name":"Tama",
   "password": "unbreakable"
 }
+###
+POST http://localhost:3003/api/login
+content-type: application/json
+
+{
+  "username":"toemie",
+  "password":"unbreakable"
+}
