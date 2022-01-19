@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLike }) => {
   const [expandedView, setExpandedView] = useState(false);
   const borderStyle = { border: "solid", padding: "5px" };
-
-  console.log(blog);
 
   let content;
   if (!expandedView) {
@@ -22,7 +20,7 @@ const Blog = ({ blog }) => {
         <br />
         {blog.url}
         <br />
-        {blog.likes} <button>like</button>
+        {blog.likes} <button onClick={handleLike}>like</button>
         <br />
         {blog.user ? blog.user.name : ""}
       </p>

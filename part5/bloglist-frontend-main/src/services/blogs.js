@@ -15,4 +15,20 @@ const postNew = (blogInfo, token) => {
   return request.then((response) => response.data);
 };
 
-export default { getAll, postNew };
+const update = (blog) => {
+  if (!blog.user) {
+    throw new Error("Cannot update blog, no user specified!");
+  }
+  const blogInfo = {
+    user: blog.user.id,
+    likes: blog.likes,
+    title: blog.title,
+    url: blog.url,
+    author: blog.author,
+  };
+
+  const request = axios.put(`${baseUrl}/${blog.id}`, blogInfo);
+  return request.then((response) => response.data);
+};
+
+export default { getAll, postNew, update };

@@ -11,15 +11,11 @@ blogRouter.get("/", async (request, response) => {
 blogRouter.delete("/:id", userExtractor, async (request, response) => {
   const id = request.params.id;
 
-  const decodedToken = jwt.verify(request.token, process.env.SECRET);
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "token missing or invalid" });
-  }
-
-  const blogToDelete = await Blog.findById(id);
   const user = request.user;
 
-  if (blogToDelete.user.toString() !== user.id.toString()) {
+  const blogToDelete = await Blog.findById(id);
+
+  if (blogToDelete && blogToDelete.user.toString() !== user.id.toString()) {
     return response
       .status(401)
       .json({ error: "user not authorised to delete blog" });
