@@ -17,11 +17,22 @@ const App = () => {
   const blogFormRef = useRef();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    getAllBlogs();
 
     const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
     setUser(userInfo);
   }, []);
+
+  const getAllBlogs = async () => {
+    const blogs = await blogService.getAll();
+    const sortedBlogs = blogs.sort((a, b) => {
+      const likesA = a.likes ? parseInt(a.title) : -1;
+      const likesB = b.likes ? parseInt(b.title) : -1;
+      return likesB - likesA;
+    });
+
+    setBlogs(sortedBlogs);
+  };
 
   const resetUser = () => {
     window.localStorage.removeItem("userInfo");
@@ -60,8 +71,7 @@ const App = () => {
 
       await blogService.update(updatedBlog);
 
-      const blogs = await blogService.getAll();
-      setBlogs(blogs);
+      getAllBlogs();
 
       createMessage(
         `Like succesfully added to ${updatedBlog.title}`,
@@ -78,8 +88,7 @@ const App = () => {
 
       blogFormRef.current.toggleVisibility();
 
-      const blogs = await blogService.getAll();
-      setBlogs(blogs);
+      getAllBlogs();
 
       createMessage(
         `New blog: ${blog.title} by ${blog.author} succesfully added`,
