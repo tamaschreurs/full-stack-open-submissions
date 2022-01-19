@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Blog = ({ blog, handleLike }) => {
+const Blog = ({ blog, handleLike, handleRemove }) => {
   const [expandedView, setExpandedView] = useState(false);
   const borderStyle = { border: "solid", padding: "5px" };
 
@@ -23,6 +23,8 @@ const Blog = ({ blog, handleLike }) => {
         {blog.likes} <button onClick={handleLike}>like</button>
         <br />
         {blog.user ? blog.user.name : ""}
+        <br />
+        <button onClick={handleRemove}>remove</button>
       </p>
     );
   }
