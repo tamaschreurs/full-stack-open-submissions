@@ -99,13 +99,15 @@ const App = () => {
     }
   };
 
-  const removeBlog = async (blogId) => {
-    try {
-      await blogService.remove(blogId, user.token);
-      getAllBlogs();
-      createMessage("Blog succesfully removed", "success");
-    } catch (exception) {
-      createMessage("Blog could not be removed", "error");
+  const removeBlog = async (blogId, blogTitle) => {
+    if (window.confirm(`Do you want to remove ${blogTitle}?`)) {
+      try {
+        await blogService.remove(blogId, user.token);
+        getAllBlogs();
+        createMessage("Blog succesfully removed", "success");
+      } catch (exception) {
+        createMessage("Blog could not be removed", "error");
+      }
     }
   };
 
@@ -141,7 +143,7 @@ const App = () => {
           key={blog.id}
           blog={blog}
           handleLike={() => addLike(blog)}
-          handleRemove={() => removeBlog(blog.id)}
+          handleRemove={() => removeBlog(blog.id, blog.title)}
         />
       ))}
     </div>
