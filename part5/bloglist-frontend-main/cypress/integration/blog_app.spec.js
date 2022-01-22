@@ -67,5 +67,36 @@ describe("Blog app", function () {
       cy.contains("view");
       cy.contains("New blog title Author de Pauthor");
     });
+
+    describe("When a blog is added", function () {
+      beforeEach(function () {
+        const blog = {
+          title: "An unremarkable blog",
+          author: "JK Rowling",
+          url: "example.com/ablog",
+        };
+        const { token } = JSON.parse(window.localStorage.getItem("userInfo"));
+        cy.request({
+          url: "http://localhost:3003/api/blogs",
+          method: "POST",
+          body: blog,
+          auth: { bearer: token },
+        });
+        cy.visit(home);
+      });
+
+      it("it can be liked", function () {
+        cy.contains("view").click();
+        cy.get(".like").click();
+        cy.get("#like-info").contains("1");
+      });
+
+      it("it can be removed by the user that created it", function () {
+        cy.contains("view").click();
+        cy.contains("An unremarkable blog").contains("remove").click();
+        cy.contains("Blog succesfully removed");
+        cy.get("p").should("have.length", 1);
+      });
+    });
   });
 });
