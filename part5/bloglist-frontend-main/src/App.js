@@ -135,7 +135,7 @@ const App = () => {
         {user.name} is logged in.
         <button onClick={resetUser}>log out</button>
       </p>
-      <Togglable buttonLabel="new note" ref={blogFormRef}>
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
         <BlogForm addBlog={addBlog} />
       </Togglable>
       {blogs.map((blog) => (

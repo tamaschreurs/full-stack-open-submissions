@@ -1,4 +1,5 @@
 describe("Blog app", function () {
+  const home = "http://localhost:3000";
   beforeEach(function () {
     cy.request("POST", "http://localhost:3003/api/testing/reset");
     const user = {
@@ -7,7 +8,7 @@ describe("Blog app", function () {
       password: "sostupid",
     };
     cy.request("POST", "http://localhost:3003/api/users", user);
-    cy.visit("http://localhost:3000");
+    cy.visit(home);
   });
 
   it("Login form is shown", function () {
@@ -35,6 +36,36 @@ describe("Blog app", function () {
         "rgb(255, 0, 0)"
       );
       cy.contains("Log in to application");
+    });
+  });
+
+  describe("When logged in", function () {
+    beforeEach(function () {
+      const user = {
+        username: "demo-user",
+        password: "sostupid",
+      };
+      cy.request("POST", "http://localhost:3003/api/login", user).then(
+        (response) => {
+          window.localStorage.setItem(
+            "userInfo",
+            JSON.stringify(response.body)
+          );
+          cy.visit(home);
+        }
+      );
+    });
+
+    it("a blog can be created", function () {
+      cy.contains("new blog").click();
+      cy.get("#title").type("New blog title");
+      cy.get("#author").type("Author de Pauthor");
+      cy.get("#url").type("http://example.com/authordepauthor");
+      cy.get("#submit-blog").click();
+
+      cy.get(".success");
+      cy.contains("view");
+      cy.contains("New blog title Author de Pauthor");
     });
   });
 });
