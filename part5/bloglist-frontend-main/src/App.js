@@ -26,8 +26,8 @@ const App = () => {
   const getAllBlogs = async () => {
     const blogs = await blogService.getAll();
     const sortedBlogs = blogs.sort((a, b) => {
-      const likesA = a.likes ? parseInt(a.title) : -1;
-      const likesB = b.likes ? parseInt(b.title) : -1;
+      const likesA = a.likes ? parseInt(a.likes) : -1;
+      const likesB = b.likes ? parseInt(b.likes) : -1;
       return likesB - likesA;
     });
 

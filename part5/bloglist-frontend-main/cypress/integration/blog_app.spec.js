@@ -88,7 +88,7 @@ describe("Blog app", function () {
       it("it can be liked", function () {
         cy.contains("view").click();
         cy.get(".like").click();
-        cy.get("#like-info").contains("1");
+        cy.get(".like-info").contains("1");
       });
 
       it("it can be removed by the user that created it", function () {
@@ -96,6 +96,60 @@ describe("Blog app", function () {
         cy.contains("An unremarkable blog").contains("remove").click();
         cy.contains("Blog succesfully removed");
         cy.get("p").should("have.length", 1);
+      });
+    });
+
+    describe("When multiple blogs are added", function () {
+      beforeEach(function () {
+        const blogs = [
+          {
+            title: "A mediocre blog",
+            author: "Drs. Q",
+            url: "drqoiewr.nl",
+            likes: 6,
+          },
+          {
+            title: "An unremarkable blog",
+            author: "JK Rowling",
+            url: "example.com/ablog",
+            likes: 0,
+          },
+
+          {
+            title: "A popular blog",
+            author: "COVID-fan",
+            url: "rivm.nl",
+            likes: 123,
+          },
+        ];
+        const { token } = JSON.parse(window.localStorage.getItem("userInfo"));
+
+        blogs.map((blog) => {
+          cy.request({
+            url: "http://localhost:3003/api/blogs",
+            method: "POST",
+            body: blog,
+            auth: { bearer: token },
+          });
+        });
+
+        cy.visit(home);
+      });
+
+      it("three blogs are visible", function () {
+        cy.contains("A popular blog");
+        cy.contains("A mediocre blog");
+        cy.contains("An unremarkable blog");
+        cy.get("p").should("have.length", 4);
+      });
+
+      it("blogs are sorted by number of likes", function () {
+        cy.get(".view-button").click({ multiple: true });
+        let likes = [];
+        cy.get(".like-info").each((like) => {
+          likes.push(parseInt(like[0].textContent));
+        });
+        cy.wrap(likes).should("deep.equal", [123, 6, 0]);
       });
     });
   });

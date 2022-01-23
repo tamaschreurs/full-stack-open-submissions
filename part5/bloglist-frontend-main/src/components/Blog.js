@@ -7,20 +7,22 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
   let content;
   if (!expandedView) {
     content = (
-      <p style={borderStyle}>
+      <p style={borderStyle} className="blog">
         {blog.title} {blog.author}{" "}
-        <button onClick={() => setExpandedView(true)}>view</button>
+        <button className="view-button" onClick={() => setExpandedView(true)}>
+          view
+        </button>
       </p>
     );
   } else {
     content = (
-      <p style={borderStyle}>
+      <p style={borderStyle} className="blog">
         {blog.title} {blog.author}{" "}
         <button onClick={() => setExpandedView(false)}>hide</button>
         <br />
         {blog.url}
         <br />
-        <span id="like-info">{blog.likes} </span>
+        <span className="like-info">{blog.likes} </span>
         <button onClick={handleLike} className="like">
           like
         </button>
