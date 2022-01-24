@@ -5,7 +5,11 @@ import Anecdote from "./Anecdote";
 import { createMessage, removeMessage } from "../reducers/messageReducer";
 
 const AnecdoteList = () => {
-  const anecdotes = useSelector((state) => state.anecdotes);
+  const anecdotes = useSelector((state) => {
+    return state.anecdotes.filter((anecdote) =>
+      anecdote.content.toLowerCase().includes(state.filter)
+    );
+  });
   const previousMessage = useSelector((state) => state.message);
   const dispatch = useDispatch();
 
