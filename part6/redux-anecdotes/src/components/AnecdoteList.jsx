@@ -13,13 +13,13 @@ const AnecdoteList = () => {
   const previousMessage = useSelector((state) => state.message);
   const dispatch = useDispatch();
 
-  const vote = (id, content) => {
+  const vote = (anecdote) => {
     if (previousMessage) {
       clearTimeout(previousMessage.timeoutId);
     }
-    dispatch(addVote(id));
+    dispatch(addVote(anecdote));
     const timeoutId = setTimeout(() => dispatch(removeMessage()), 5000);
-    dispatch(createMessage(`You voted '${content}'`, timeoutId));
+    dispatch(createMessage(`You voted '${anecdote.content}'`, timeoutId));
   };
 
   return (
@@ -29,7 +29,7 @@ const AnecdoteList = () => {
           key={anecdote.id}
           content={anecdote.content}
           votes={anecdote.votes}
-          handleVote={() => vote(anecdote.id, anecdote.content)}
+          handleVote={() => vote(anecdote)}
         />
       ))}
     </div>
