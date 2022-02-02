@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addVote } from "../reducers/anecdoteReducer";
 import Anecdote from "./Anecdote";
-import { createMessage, removeMessage } from "../reducers/messageReducer";
+import { setMessage } from "../reducers/messageReducer";
 
 const AnecdoteList = () => {
   const anecdotes = useSelector((state) => {
@@ -18,8 +18,7 @@ const AnecdoteList = () => {
       clearTimeout(previousMessage.timeoutId);
     }
     dispatch(addVote(anecdote));
-    const timeoutId = setTimeout(() => dispatch(removeMessage()), 5000);
-    dispatch(createMessage(`You voted '${anecdote.content}'`, timeoutId));
+    dispatch(setMessage(`You voted '${anecdote.content}'`, 5));
   };
 
   return (

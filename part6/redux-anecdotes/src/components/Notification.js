@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const Notification = () => {
-  const message = useSelector((state) => state.message);
+  const message = useSelector((state) => state.message.content);
   const style = {
     border: "solid",
     padding: 10,
@@ -13,7 +13,7 @@ const Notification = () => {
     return null;
   }
 
-  return <div style={style}>{message.content}</div>;
+  return <div style={style}>{message}</div>;
 };
 
 export default Notification;

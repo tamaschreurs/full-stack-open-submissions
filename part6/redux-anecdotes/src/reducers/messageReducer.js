@@ -1,24 +1,28 @@
-const reducer = (state = null, action) => {
+const reducer = (state = {}, action) => {
   switch (action.type) {
-    case "CREATE":
-      return action.data;
-    case "REMOVE":
-      return null;
+    case "SET_CONTENT":
+      return { ...state, content: action.data };
+    case "SET_TIMEOUTID":
+      return { ...state, timeoutId: action.data };
+    case "CLEAR_TIMEOUTID":
+      window.clearTimeout(state.timeoutId);
+      return { ...state, timeoutId: null };
+    case "CLEAR_MESSAGE":
+      return {};
     default:
       return state;
   }
 };
 
-export const createMessage = (content, timeoutId) => {
-  return {
-    type: "CREATE",
-    data: { content, timeoutId },
-  };
-};
-
-export const removeMessage = () => {
-  return {
-    type: "REMOVE",
+export const setMessage = (content, duration) => {
+  return (dispatch) => {
+    dispatch({ type: "CLEAR_TIMEOUTID" });
+    dispatch({ type: "SET_CONTENT", data: content });
+    const timeoutId = setTimeout(
+      () => dispatch({ type: "CLEAR_MESSAGE" }),
+      duration * 1000
+    );
+    dispatch({ type: "SET_TIMEOUTID", data: timeoutId });
   };
 };
 
