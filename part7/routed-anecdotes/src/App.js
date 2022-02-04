@@ -79,9 +79,9 @@ const Footer = () => (
 
 const CreateNew = (props) => {
   const history = useHistory();
-  const content = useField("text");
-  const author = useField("text");
-  const info = useField("text");
+  const [content, resetContent] = useField("text");
+  const [author, resetAuthor] = useField("text");
+  const [info, resetInfo] = useField("text");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -92,6 +92,12 @@ const CreateNew = (props) => {
       votes: 0,
     });
     history.push("/");
+  };
+
+  const handleReset = () => {
+    resetContent();
+    resetAuthor();
+    resetInfo();
   };
 
   return (
@@ -111,6 +117,9 @@ const CreateNew = (props) => {
           <input {...info} />
         </div>
         <button>create</button>
+        <button type="button" onClick={handleReset}>
+          reset
+        </button>
       </form>
     </div>
   );
