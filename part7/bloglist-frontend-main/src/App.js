@@ -13,6 +13,7 @@ import {
 } from "./reducers/blogReducer";
 import { newMessage } from "./reducers/messageReducer";
 import { loginUser, logoutUser, setUserInfo } from "./reducers/userReducer";
+import UserList from "./components/UserList";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -88,6 +89,7 @@ const App = () => {
         {user.name} is logged in.
         <button onClick={resetUser}>log out</button>
       </p>
+      <UserList />
       <Togglable buttonLabel="new blog" ref={blogFormRef}>
         <BlogForm addBlog={addBlog} />
       </Togglable>
