@@ -18,6 +18,7 @@ import { Route, Link, Routes, useMatch, useNavigate } from "react-router-dom";
 import UserDetails from "./components/UserDetails";
 import { initUsers } from "./reducers/userInfoReducer";
 import BlogDetails from "./components/BlogDetails";
+import Menu from "./components/Menu";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -101,12 +102,9 @@ const App = () => {
 
   return (
     <div>
-      <h2>blogs</h2>
+      <Menu name={user.name} handleLogout={resetUser} />
+      <h2>blog app</h2>
       <Message message={message.content} type={message.type} />
-      <p>
-        {user.name} is logged in.
-        <button onClick={resetUser}>log out</button>
-      </p>
       <Routes>
         <Route path="/users" element={<UserList />} />
         <Route path="/users/:id" element={<UserDetails user={matchedUser} />} />
