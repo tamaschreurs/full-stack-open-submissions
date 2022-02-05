@@ -1,6 +1,19 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { newComment } from "../reducers/blogReducer";
+import CommentForm from "./CommentForm";
 
 const BlogDetails = ({ blog, handleLike, handleRemove }) => {
+  const dispatch = useDispatch();
+
+  const addComment = (event) => {
+    event.preventDefault();
+
+    const comment = event.target.comment.value;
+    dispatch(newComment(blog.id, comment));
+    event.target.comment.value = "";
+  };
+
   if (!blog) {
     return null;
   }
@@ -24,6 +37,7 @@ const BlogDetails = ({ blog, handleLike, handleRemove }) => {
       <br />
       <button onClick={handleRemove}>remove</button>
       <h3>comments</h3>
+      <CommentForm handleComment={addComment} />
       {blog.comments.length !== 0 ? (
         <ul>
           {blog.comments.map((comment, index) => (

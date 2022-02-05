@@ -23,6 +23,16 @@ const reducer = (state = [], action) => {
       return state.concat(action.data);
     case "REMOVE_BLOG":
       return state.filter((blog) => blog.id !== action.data);
+    case "UPDATE_COMMENTS":
+      const commentedBlog = state.find((blog) => blog.id === action.data.id);
+      const newCommentedBlog = {
+        ...commentedBlog,
+        comments: action.data.comments,
+      };
+      const allUpdatedblogs = state.map((blog) =>
+        blog.id !== action.data.id ? blog : newCommentedBlog
+      );
+      return allUpdatedblogs;
     default:
       return state;
   }
@@ -95,6 +105,25 @@ export const deleteBlog = (blogId, token) => {
       dispatch(newMessage("Blog succesfully removed", "success"));
     } catch (error) {
       dispatch(newMessage("Blog could not be removed", "error"));
+    }
+  };
+};
+
+export const newComment = (blogId, content) => {
+  return async (dispatch) => {
+    try {
+      const response = await blogService.comment(blogId, content);
+      dispatch({
+        type: "UPDATE_COMMENTS",
+        data: {
+          id: blogId,
+          comments: response.comments,
+        },
+      });
+      dispatch(newMessage("Comment succesfully added", "success"));
+    } catch (error) {
+      console.log(error);
+      dispatch(newMessage("Comment could not be added", "error"));
     }
   };
 };
