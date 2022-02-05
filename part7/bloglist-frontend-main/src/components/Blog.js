@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Blog = ({ blog, handleLike, handleRemove }) => {
   const [expandedView, setExpandedView] = useState(false);
@@ -8,10 +9,12 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
   if (!expandedView) {
     content = (
       <p style={borderStyle} className="blog">
-        {blog.title} {blog.author}{" "}
-        <button className="view-button" onClick={() => setExpandedView(true)}>
+        <Link to={`/blogs/${blog.id}`}>
+          {blog.title} {blog.author}
+        </Link>{" "}
+        {/* <button className="view-button" onClick={() => setExpandedView(true)}>
           view
-        </button>
+        </button> */}
       </p>
     );
   } else {

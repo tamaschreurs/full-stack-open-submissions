@@ -14,9 +14,10 @@ import {
 import { newMessage } from "./reducers/messageReducer";
 import { loginUser, logoutUser, setUserInfo } from "./reducers/userReducer";
 import UserList from "./components/UserList";
-import { Route, Link, Routes, useMatch } from "react-router-dom";
+import { Route, Link, Routes, useMatch, useNavigate } from "react-router-dom";
 import UserDetails from "./components/UserDetails";
 import { initUsers } from "./reducers/userInfoReducer";
+import BlogDetails from "./components/BlogDetails";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -38,6 +39,11 @@ const App = () => {
   const userMatch = useMatch("/users/:id");
   const matchedUser = userMatch
     ? users.find((user) => user.id === userMatch.params.id)
+    : null;
+
+  const blogMatch = useMatch("/blogs/:id");
+  const matchedBlog = blogMatch
+    ? blogs.find((blog) => blog.id === blogMatch.params.id)
     : null;
 
   const resetUser = () => {
@@ -68,10 +74,13 @@ const App = () => {
     blogFormRef.current.toggleVisibility();
   };
 
+  const navigate = useNavigate();
+
   const removeBlog = async (blogId, blogTitle) => {
     if (window.confirm(`Do you want to remove ${blogTitle}?`)) {
       dispatch(deleteBlog(blogId, user.token));
     }
+    navigate("/");
   };
 
   if (user === null) {
@@ -101,6 +110,16 @@ const App = () => {
       <Routes>
         <Route path="/users" element={<UserList />} />
         <Route path="/users/:id" element={<UserDetails user={matchedUser} />} />
+        <Route
+          path="/blogs/:id"
+          element={
+            <BlogDetails
+              blog={matchedBlog}
+              handleLike={() => addLike(matchedBlog)}
+              handleRemove={() => removeBlog(matchedBlog.id, matchedBlog.title)}
+            />
+          }
+        />
         <Route
           path="/"
           element={
