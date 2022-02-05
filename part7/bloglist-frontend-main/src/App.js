@@ -3,36 +3,33 @@ import Blog from "./components/Blog";
 import Message from "./components/Message";
 import BlogForm from "./components/BlogForm";
 import LoginForm from "./components/LoginForm";
-import blogService from "./services/blogs";
 import loginService from "./services/login";
 import Togglable from "./components/Togglable";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  initBlogs,
+  newLike,
+  newBlog,
+  deleteBlog,
+} from "./reducers/blogReducer";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState({});
 
   const blogFormRef = useRef();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getAllBlogs();
+    dispatch(initBlogs());
 
     const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
     setUser(userInfo);
   }, []);
 
-  const getAllBlogs = async () => {
-    const blogs = await blogService.getAll();
-    const sortedBlogs = blogs.sort((a, b) => {
-      const likesA = a.likes ? parseInt(a.likes) : -1;
-      const likesB = b.likes ? parseInt(b.likes) : -1;
-      return likesB - likesA;
-    });
-
-    setBlogs(sortedBlogs);
-  };
+  const blogs = useSelector((state) => state);
 
   const resetUser = () => {
     window.localStorage.removeItem("userInfo");
@@ -64,34 +61,23 @@ const App = () => {
     }
   };
 
-  const addLike = async (blog) => {
+  const addLike = (blog) => {
     try {
-      let updatedBlog = { ...blog };
-      updatedBlog.likes = updatedBlog.likes + 1;
+      dispatch(newLike(blog));
 
-      await blogService.update(updatedBlog);
-
-      getAllBlogs();
-
-      createMessage(
-        `Like succesfully added to ${updatedBlog.title}`,
-        "success"
-      );
+      createMessage(`Like succesfully added to ${blog.title}`, "success");
     } catch (exception) {
       createMessage("Like could not be added", "error");
     }
   };
 
-  const addBlog = async (blogInfo) => {
+  const addBlog = (blogInfo) => {
     try {
-      const blog = await blogService.postNew(blogInfo, user.token);
-
+      dispatch(newBlog(blogInfo, user.token));
       blogFormRef.current.toggleVisibility();
 
-      getAllBlogs();
-
       createMessage(
-        `New blog: ${blog.title} by ${blog.author} succesfully added`,
+        `New blog: ${blogInfo.title} by ${blogInfo.author} succesfully added`,
         "success"
       );
     } catch (exception) {
@@ -102,8 +88,7 @@ const App = () => {
   const removeBlog = async (blogId, blogTitle) => {
     if (window.confirm(`Do you want to remove ${blogTitle}?`)) {
       try {
-        await blogService.remove(blogId, user.token);
-        getAllBlogs();
+        dispatch(deleteBlog(blogId, user.token));
         createMessage("Blog succesfully removed", "success");
       } catch (exception) {
         createMessage("Blog could not be removed", "error");

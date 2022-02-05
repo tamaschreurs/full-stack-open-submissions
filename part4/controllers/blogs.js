@@ -63,7 +63,12 @@ blogRouter.post("/", userExtractor, async (request, response) => {
   user.blogs = user.blogs.concat(result._id);
   await user.save();
 
-  response.status(201).json(result);
+  const formattedBlog = await Blog.findById(result._id).populate("user", {
+    username: 1,
+    name: 1,
+  });
+
+  response.status(201).json(formattedBlog);
 });
 
 module.exports = blogRouter;
