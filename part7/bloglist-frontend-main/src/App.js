@@ -3,7 +3,6 @@ import Blog from "./components/Blog";
 import Message from "./components/Message";
 import BlogForm from "./components/BlogForm";
 import LoginForm from "./components/LoginForm";
-import loginService from "./services/login";
 import Togglable from "./components/Togglable";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -13,11 +12,11 @@ import {
   deleteBlog,
 } from "./reducers/blogReducer";
 import { newMessage } from "./reducers/messageReducer";
+import { loginUser, logoutUser, setUserInfo } from "./reducers/userReducer";
 
 const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
 
   const blogFormRef = useRef();
   const dispatch = useDispatch();
@@ -26,34 +25,28 @@ const App = () => {
     dispatch(initBlogs());
 
     const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
-    setUser(userInfo);
+    dispatch(setUserInfo(userInfo));
   }, []);
 
-  const { blogs, message } = useSelector((state) => state);
+  const { blogs, message, user } = useSelector((state) => state);
 
   const resetUser = () => {
     window.localStorage.removeItem("userInfo");
-    setUser(null);
+    dispatch(logoutUser());
     dispatch(newMessage("Succesfully logged out", "success"));
   };
 
-  const handleLogin = async (event) => {
+  const handleLogin = (event) => {
     event.preventDefault();
-
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-      setUser(user);
-      window.localStorage.setItem("userInfo", JSON.stringify(user));
-
-      setUsername("");
-      setPassword("");
-      dispatch(newMessage(`${user.name} logged in succesfully`, "success"));
-    } catch (exception) {
-      dispatch(newMessage("Wrong credentials", "error"));
-    }
+    dispatch(loginUser(username, password)).then((user) => {
+      if (user) {
+        setUsername("");
+        setPassword("");
+        dispatch(newMessage(`${user.name} logged in succesfully`, "success"));
+      } else {
+        dispatch(newMessage("Wrong credentials", "error"));
+      }
+    });
   };
 
   const addLike = (blog) => {
