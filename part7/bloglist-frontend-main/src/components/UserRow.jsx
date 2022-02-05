@@ -1,13 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { TableRow, TableCell } from "@mui/material";
+
 const UserRow = ({ name, blogNo, id }) => {
   return (
-    <tr>
-      <td>
+    <TableRow>
+      <TableCell>
         <Link to={id}>{name}</Link>
-      </td>
-      <td>{blogNo}</td>
-    </tr>
+      </TableCell>
+      <TableCell>{blogNo}</TableCell>
+    </TableRow>
   );
 };
 

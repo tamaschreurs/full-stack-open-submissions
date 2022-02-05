@@ -19,6 +19,13 @@ import UserDetails from "./components/UserDetails";
 import { initUsers } from "./reducers/userInfoReducer";
 import BlogDetails from "./components/BlogDetails";
 import Menu from "./components/Menu";
+import {
+  Container,
+  TableContainer,
+  Table,
+  TableBody,
+  Paper,
+} from "@mui/material";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -86,7 +93,7 @@ const App = () => {
 
   if (user === null) {
     return (
-      <div>
+      <Container>
         <h2>Log in to application</h2>
         <Message message={message.content} type={message.type} />
         <LoginForm
@@ -96,12 +103,12 @@ const App = () => {
           handleUsernameChange={({ target }) => setUsername(target.value)}
           handlePasswordChange={({ target }) => setPassword(target.value)}
         />
-      </div>
+      </Container>
     );
   }
 
   return (
-    <div>
+    <Container>
       <Menu name={user.name} handleLogout={resetUser} />
       <h2>blog app</h2>
       <Message message={message.content} type={message.type} />
@@ -125,19 +132,25 @@ const App = () => {
               <Togglable buttonLabel="new blog" ref={blogFormRef}>
                 <BlogForm addBlog={addBlog} />
               </Togglable>
-              {blogs.map((blog) => (
-                <Blog
-                  key={blog.id}
-                  blog={blog}
-                  handleLike={() => addLike(blog)}
-                  handleRemove={() => removeBlog(blog.id, blog.title)}
-                />
-              ))}
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableBody>
+                    {blogs.map((blog) => (
+                      <Blog
+                        key={blog.id}
+                        blog={blog}
+                        handleLike={() => addLike(blog)}
+                        handleRemove={() => removeBlog(blog.id, blog.title)}
+                      />
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </div>
           }
         />
       </Routes>
-    </div>
+    </Container>
   );
 };
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { TextField, Button } from "@mui/material";
 
 const LoginForm = ({
   handleLogin,
@@ -10,26 +11,27 @@ const LoginForm = ({
   return (
     <form onSubmit={handleLogin}>
       <div>
-        username
-        <input
+        <TextField
           id="username"
           type="text"
           value={username}
           name="Username"
+          label="Username"
           onChange={handleUsernameChange}
+          autoComplete="off"
         />
       </div>
       <div>
-        password
-        <input
+        <TextField
           id="password"
           type="password"
           value={password}
           name="Password"
+          label="Password"
           onChange={handlePasswordChange}
         />
       </div>
-      <button type="submit">login</button>
+      <Button type="submit">login</Button>
     </form>
   );
 };
