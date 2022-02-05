@@ -1,9 +1,11 @@
 import React from "react";
-
-const UserRow = ({ name, blogNo }) => {
+import { Link } from "react-router-dom";
+const UserRow = ({ name, blogNo, id }) => {
   return (
     <tr>
-      <td>{name}</td>
+      <td>
+        <Link to={id}>{name}</Link>
+      </td>
       <td>{blogNo}</td>
     </tr>
   );

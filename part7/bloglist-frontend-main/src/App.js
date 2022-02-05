@@ -14,7 +14,9 @@ import {
 import { newMessage } from "./reducers/messageReducer";
 import { loginUser, logoutUser, setUserInfo } from "./reducers/userReducer";
 import UserList from "./components/UserList";
-import { Route, Link, Routes } from "react-router-dom";
+import { Route, Link, Routes, useMatch } from "react-router-dom";
+import UserDetails from "./components/UserDetails";
+import { initUsers } from "./reducers/userInfoReducer";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -25,12 +27,18 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initBlogs());
+    dispatch(initUsers());
 
     const userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
     dispatch(setUserInfo(userInfo));
   }, []);
 
-  const { blogs, message, user } = useSelector((state) => state);
+  const { blogs, message, user, users } = useSelector((state) => state);
+
+  const userMatch = useMatch("/users/:id");
+  const matchedUser = userMatch
+    ? users.find((user) => user.id === userMatch.params.id)
+    : null;
 
   const resetUser = () => {
     window.localStorage.removeItem("userInfo");
@@ -92,6 +100,7 @@ const App = () => {
       </p>
       <Routes>
         <Route path="/users" element={<UserList />} />
+        <Route path="/users/:id" element={<UserDetails user={matchedUser} />} />
         <Route
           path="/"
           element={

@@ -1,15 +1,8 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import UserRow from "./UserRow";
-import { initUsers } from "../reducers/userInfoReducer";
 
 const UserList = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(initUsers());
-  }, []);
-
   const { users } = useSelector((state) => state);
 
   return (
@@ -27,6 +20,7 @@ const UserList = () => {
             <UserRow
               key={user.id}
               name={user.name}
+              id={user.id}
               blogNo={user.blogs.length}
             />
           ))}
