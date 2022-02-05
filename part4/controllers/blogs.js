@@ -30,15 +30,36 @@ blogRouter.delete("/:id", userExtractor, async (request, response) => {
   response.status(204).end();
 });
 
+blogRouter.post("/:id/comments", async (request, response) => {
+  const id = request.params.id;
+  const comment = request.body.comment;
+
+  const originalBlog = await Blog.findById(id);
+  let comments;
+  if (originalBlog.comments) {
+    comments = [...originalBlog.comments, comment];
+  } else {
+    comments = [comment];
+  }
+
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    id,
+    { comments },
+    { new: true, runValidators: true }
+  );
+
+  response.json(updatedBlog);
+});
+
 blogRouter.put("/:id", async (request, response) => {
   const id = request.params.id;
   const likeUpdated = { likes: request.body.likes };
 
-  const updatedNote = await Blog.findByIdAndUpdate(id, likeUpdated, {
+  const updatedBlog = await Blog.findByIdAndUpdate(id, likeUpdated, {
     new: true,
     runValidators: true,
   });
-  response.json(updatedNote);
+  response.json(updatedBlog);
 });
 
 blogRouter.post("/", userExtractor, async (request, response) => {

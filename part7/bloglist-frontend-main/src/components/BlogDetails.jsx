@@ -23,6 +23,16 @@ const BlogDetails = ({ blog, handleLike, handleRemove }) => {
       {blog.user ? `added by ${blog.user.name}` : ""}
       <br />
       <button onClick={handleRemove}>remove</button>
+      <h3>comments</h3>
+      {blog.comments.length !== 0 ? (
+        <ul>
+          {blog.comments.map((comment, index) => (
+            <li key={index}>{comment}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>no comments yet</p>
+      )}
     </div>
   );
 };

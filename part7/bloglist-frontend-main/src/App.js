@@ -14,7 +14,7 @@ import {
 import { newMessage } from "./reducers/messageReducer";
 import { loginUser, logoutUser, setUserInfo } from "./reducers/userReducer";
 import UserList from "./components/UserList";
-import { Route, Link, Routes, useMatch, useNavigate } from "react-router-dom";
+import { Route, Routes, useMatch, useNavigate } from "react-router-dom";
 import UserDetails from "./components/UserDetails";
 import { initUsers } from "./reducers/userInfoReducer";
 import BlogDetails from "./components/BlogDetails";

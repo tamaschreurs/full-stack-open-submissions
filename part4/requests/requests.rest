@@ -1,5 +1,12 @@
 GET http://localhost:3003/api/blogs
 ###
+POST http://localhost:3003/api/blogs/61cb6a4ac180b3ec9c6cf6cb/comments
+content-type: application/json
+
+{
+  "comment": "Geweldige blog"
+}
+###
 POST http://localhost:3003/api/blogs
 content-type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRvZW1pZSIsImlkIjoiNjFkNmY1MDU2MzdkMTRhODY1YWNlYTcyIiwiaWF0IjoxNjQyMzY2MzYzfQ.ISkJr8LtY3tvFW079wP3gQJcSqvP9jegEl7sEHl0nqs
