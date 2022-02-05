@@ -1,6 +1,7 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable indent */
 import blogService from "../services/blogs";
+import { newMessage } from "./messageReducer";
 
 const reducer = (state = [], action) => {
   console.log("state now: ", state);
@@ -47,32 +48,54 @@ export const initBlogs = () => {
 
 export const newLike = (blog) => {
   return async (dispatch) => {
-    const changedBlog = { ...blog, likes: blog.likes + 1 };
-    await blogService.update(changedBlog);
-    dispatch({
-      type: "ADD_LIKE",
-      data: changedBlog.id,
-    });
+    try {
+      const changedBlog = { ...blog, likes: blog.likes + 1 };
+      await blogService.update(changedBlog);
+      dispatch({
+        type: "ADD_LIKE",
+        data: changedBlog.id,
+      });
+      dispatch(
+        newMessage(`Like succesfully added to ${blog.title}`, "success")
+      );
+    } catch (error) {
+      dispatch(newMessage("Like could not be added", "error"));
+    }
   };
 };
 
 export const newBlog = (info, token) => {
   return async (dispatch) => {
-    const blog = await blogService.postNew(info, token);
-    dispatch({
-      type: "ADD_BLOG",
-      data: blog,
-    });
+    try {
+      const blog = await blogService.postNew(info, token);
+      dispatch({
+        type: "ADD_BLOG",
+        data: blog,
+      });
+      dispatch(
+        newMessage(
+          `New blog: ${info.title} by ${info.author} succesfully added`,
+          "success"
+        )
+      );
+    } catch (error) {
+      dispatch(newMessage("Blog could not be added", "error"));
+    }
   };
 };
 
 export const deleteBlog = (blogId, token) => {
   return async (dispatch) => {
-    await blogService.remove(blogId, token);
-    dispatch({
-      type: "REMOVE_BLOG",
-      data: blogId,
-    });
+    try {
+      await blogService.remove(blogId, token);
+      dispatch({
+        type: "REMOVE_BLOG",
+        data: blogId,
+      });
+      dispatch(newMessage("Blog succesfully removed", "success"));
+    } catch (error) {
+      dispatch(newMessage("Blog could not be removed", "error"));
+    }
   };
 };
 

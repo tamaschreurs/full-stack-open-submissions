@@ -12,12 +12,12 @@ import {
   newBlog,
   deleteBlog,
 } from "./reducers/blogReducer";
+import { newMessage } from "./reducers/messageReducer";
 
 const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [message, setMessage] = useState({});
 
   const blogFormRef = useRef();
   const dispatch = useDispatch();
@@ -29,17 +29,12 @@ const App = () => {
     setUser(userInfo);
   }, []);
 
-  const blogs = useSelector((state) => state);
+  const { blogs, message } = useSelector((state) => state);
 
   const resetUser = () => {
     window.localStorage.removeItem("userInfo");
     setUser(null);
-    createMessage("Succesfully logged out", "success");
-  };
-
-  const createMessage = (content, type) => {
-    setMessage({ content, type });
-    setTimeout(() => setMessage({}), 5000);
+    dispatch(newMessage("Succesfully logged out", "success"));
   };
 
   const handleLogin = async (event) => {
@@ -55,44 +50,24 @@ const App = () => {
 
       setUsername("");
       setPassword("");
-      createMessage(`${user.name} logged in succesfully`, "success");
+      dispatch(newMessage(`${user.name} logged in succesfully`, "success"));
     } catch (exception) {
-      createMessage("Wrong credentials", "error");
+      dispatch(newMessage("Wrong credentials", "error"));
     }
   };
 
   const addLike = (blog) => {
-    try {
-      dispatch(newLike(blog));
-
-      createMessage(`Like succesfully added to ${blog.title}`, "success");
-    } catch (exception) {
-      createMessage("Like could not be added", "error");
-    }
+    dispatch(newLike(blog));
   };
 
   const addBlog = (blogInfo) => {
-    try {
-      dispatch(newBlog(blogInfo, user.token));
-      blogFormRef.current.toggleVisibility();
-
-      createMessage(
-        `New blog: ${blogInfo.title} by ${blogInfo.author} succesfully added`,
-        "success"
-      );
-    } catch (exception) {
-      createMessage("Blog could not be added", "error");
-    }
+    dispatch(newBlog(blogInfo, user.token));
+    blogFormRef.current.toggleVisibility();
   };
 
   const removeBlog = async (blogId, blogTitle) => {
     if (window.confirm(`Do you want to remove ${blogTitle}?`)) {
-      try {
-        dispatch(deleteBlog(blogId, user.token));
-        createMessage("Blog succesfully removed", "success");
-      } catch (exception) {
-        createMessage("Blog could not be removed", "error");
-      }
+      dispatch(deleteBlog(blogId, user.token));
     }
   };
 

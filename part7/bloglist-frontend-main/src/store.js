@@ -1,8 +1,12 @@
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, combineReducers } from "redux";
 import blogReducer from "./reducers/blogReducer";
+import messageReducer from "./reducers/messageReducer";
 import thunk from "redux-thunk";
 
-const reducer = blogReducer;
+const reducer = combineReducers({
+  blogs: blogReducer,
+  message: messageReducer,
+});
 
 const store = createStore(reducer, applyMiddleware(thunk));
 
