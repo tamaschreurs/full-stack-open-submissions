@@ -35,7 +35,9 @@ const AuthorEdit = (props) => {
         <select value={name} onChange={({ target }) => setName(target.value)}>
           <option></option>
           {authorResults.data.allAuthors.map(({ name }) => (
-            <option value={name}>{name}</option>
+            <option key={name} value={name}>
+              {name}
+            </option>
           ))}
         </select>
         <br />
