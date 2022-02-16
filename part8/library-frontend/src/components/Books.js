@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
-import { ALL_BOOKS } from "../utils/queries";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { ALL_BOOKS, BOOKS_BY_GENRE } from "../utils/queries";
 import BookTable from "./BookTable";
 
 const Books = (props) => {
-  const [genre, setGenre] = useState("ALL");
+  const [genre, setGenre] = useState(null);
   const result = useQuery(ALL_BOOKS);
   const [genreList, setGenreList] = useState([]);
+  const [getBooks, bookResult] = useLazyQuery(BOOKS_BY_GENRE);
+
+  useEffect(() => {
+    getBooks({ variables: { genre } });
+  }, [genre, getBooks]);
 
   useEffect(() => {
     if (result.data) {
@@ -27,38 +32,28 @@ const Books = (props) => {
     return null;
   } else if (result.loading) {
     return <div>loading...</div>;
+  } else if (bookResult.loading) {
+    return <div>loading books...</div>;
   }
 
-  const books = result.data.allBooks;
+  const books = bookResult.data.allBooks;
 
   let selectedGenre;
-  let filteredBooks;
-  if (genre === "ALL") {
+  if (genre === "") {
     selectedGenre = <p>in all genres</p>;
-    filteredBooks = books;
   } else {
     selectedGenre = (
       <p>
         in genre <span style={{ fontWeight: "bold" }}>{genre}</span>
       </p>
     );
-    filteredBooks = books.filter((book) => {
-      let includesGenre = false;
-      book.genres.forEach((g) => {
-        if (g === genre) {
-          includesGenre = true;
-          return;
-        }
-      });
-      return includesGenre;
-    });
   }
 
   return (
     <div>
       <h2>books</h2>
       {selectedGenre}
-      <BookTable books={filteredBooks} />
+      <BookTable books={books} />
       {genreList.map((genre) => {
         return (
           <button key={genre} onClick={() => setGenre(genre)}>
@@ -66,7 +61,7 @@ const Books = (props) => {
           </button>
         );
       })}
-      <button onClick={() => setGenre("ALL")}>all genres</button>
+      <button onClick={() => setGenre("")}>all genres</button>
     </div>
   );
 };

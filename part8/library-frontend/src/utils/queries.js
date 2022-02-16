@@ -82,7 +82,7 @@ export const ME = gql`
 `;
 
 export const BOOKS_BY_GENRE = gql`
-  query GenreBooks($genre: String!) {
+  query GenreBooks($genre: String) {
     allBooks(genre: $genre) {
       title
       author {
