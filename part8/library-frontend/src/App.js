@@ -5,14 +5,40 @@ import NewBook from "./components/NewBook";
 import AuthorEdit from "./components/AuthorEdit";
 import Login from "./components/Login";
 import Recommend from "./components/Recommend";
+import { useSubscription } from "@apollo/client";
+import { ALL_BOOKS, BOOK_ADDED } from "./utils/queries";
 
-const App = () => {
+export const updateCache = (cache, query, addedBook) => {
+  const uniqByName = (a) => {
+    let seen = new Set();
+    return a.filter((item) => {
+      let k = item.name;
+      return seen.has(k) ? false : seen.add(k);
+    });
+  };
+  cache.updateQuery(query, ({ allBooks }) => {
+    return {
+      allPersons: uniqByName(allBooks.concat(addedBook)),
+    };
+  });
+};
+
+const App = ({ client }) => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
 
   useEffect(() => {
     setToken(localStorage.getItem("user-token"));
   }, []);
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded;
+      console.log(`${addedBook.title} added`);
+
+      updateCache(client.cache, { query: ALL_BOOKS }, addedBook);
+    },
+  });
 
   const loggedIn = !!token;
 

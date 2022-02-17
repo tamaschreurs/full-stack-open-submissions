@@ -4,14 +4,14 @@ import { ALL_BOOKS, BOOKS_BY_GENRE } from "../utils/queries";
 import BookTable from "./BookTable";
 
 const Books = (props) => {
-  const [genre, setGenre] = useState(null);
+  const [genre, setGenre] = useState("");
   const result = useQuery(ALL_BOOKS);
   const [genreList, setGenreList] = useState([]);
   const [getBooks, bookResult] = useLazyQuery(BOOKS_BY_GENRE);
 
   useEffect(() => {
     getBooks({ variables: { genre } });
-  }, [genre, getBooks]);
+  }, [genre, getBooks, result.data]);
 
   useEffect(() => {
     if (result.data) {
