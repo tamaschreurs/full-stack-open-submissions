@@ -84,10 +84,12 @@ const resolvers = {
     },
   },
   Author: {
-    bookCount: async (root) => {
-      const booksFromAuthor = await Book.countDocuments({ author: root.id });
-      return booksFromAuthor;
-    },
+    bookCount: async (root, args, { loaders }) =>
+      await loaders.bookCount.load(root.id),
+    // bookCount: async (root) => {
+    //   const booksFromAuthor = await Book.countDocuments({ author: root.id });
+    //   return booksFromAuthor;
+    // },
   },
   Subscription: {
     bookAdded: {
